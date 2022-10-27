@@ -18,6 +18,25 @@ const MenuQuestions = [
     },
 ];
 
+//list departments
+function showDepartments() {
+  db.promise()
+    .query("SELECT department.id, department.department_name FROM department;")
+    .then((departments) => {
+      console.table(departments[0]);
+      mainMenuPrompt();
+    });
+}
+
+function showRoles() {
+  db.promise()
+  .query("SELECT role_id, title, salary, department_id FROM role;")
+  .then((roles)=> {
+    console.table(roles[0]);
+   mainMenuPrompt();
+  });
+}
+
 const addDepartmentsPrompts = [
   {
     type: "input",
@@ -34,18 +53,63 @@ const addDepartmentsPrompts = [
   }
   
 ];
+
+const addRolePrompts = [
+  {
+    type: "input",
+    name: "role_id",
+    message: "Please input a role ID",
+    
+  },
+
+  {
+    type: "input",
+    name: "title",
+    message: "Please input a job title",
+    
+  },
+
+  {
+    type: "input",
+    name: "department_id",
+    message: "Please input a department ID",
+    
+  },
+
+  {
+    type: "input",
+    name: "salary",
+    message: "Please input a salary",
+    
+  }
+  
+];
+
+// "View all departments",
+//         "View all roles",
+//         "View all employees",
+//         "Add a department",
+//         "Add a role",
+//         "Add an employee",
+//         "Update an employee"
+
 function mainMenuPrompt() {
   inquirer.prompt(MenuQuestions).then(function(selection){
     console.log(selection.answer);
     const answer = selection.answer;
     if(answer === "View all departments"){
-      listDepartments()
+      showDepartments()
     }
     else if( answer === "Add a department"){
       promptAddDepartments()
     }
-    
-  });
+    if( answer === "View all roles"){
+      showRoles()
+    }
+    else if( answer === "Add a role"){
+      promptAddRoles()
+    }
+});
 
 
  
@@ -72,10 +136,20 @@ db.promise()
   console.log(newDepartments[0]);
   mainMenuPrompt()
 
-})
-
-
+});
 }
+
+function addRoles(role_id, title, salary, department_id ){
+  db.promise()
+  .query("INSERT INTO roles (role_id, title, salary, department_id) VALUES (?,?,?.?) ",[role_id, title, salary, department_id] )
+  .then((newRoles) => {
+    console.log(newRoles[0]);
+    mainMenuPrompt()
+  });
+}
+
+
+
 //Prompt for adding new department
 function promptAddDepartments(){
 inquirer.prompt(addDepartmentsPrompts).then(function(inputs){
@@ -86,24 +160,18 @@ inquirer.prompt(addDepartmentsPrompts).then(function(inputs){
 });
 
 }
-function listDepartments() {
-    db.promise()
-      .query("SELECT department.id, department.department_name FROM department;")
-      .then((departments) => {
-        console.table(departments[0]);
-        mainMenuPrompt();
-      });
+//Prompt for adding a new role 
+function promptAddRoles(){
+  inquirer.prompt(addRolePrompts).then(function(inputs){
+    console.log(inputs.roles_id, inputs.title, inputs.salary, inputs.department_id);
+    const newRoleId = inputs.roles_id
+    const newRoleTitle = inputs.title
+    const newRoleSalary = inputs.salary
+    const newRDepartmentId = inputs.deparment_id
+    addRoles( newRoleId, newRoleTitle,newRoleSalary, newRDepartmentId  );
+  });
+  
   }
-//add a department
-// app.post('/api/departments', ({ body }, res) => {
-//     const errors = inputCheck(body, 'id', 'department_name');
-//     if (errors) {
-//       res.status(400).json({ error: errors });
-//       return;
-//     }
-//   });
 
-  //link inquirer to view and create departments 
-  //
 
   mainMenuPrompt()
