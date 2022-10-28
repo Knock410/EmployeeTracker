@@ -1,3 +1,4 @@
+const e = require("express");
 const inquirer = require("inquirer");
 const mysql = require('mysql2');
 
@@ -30,12 +31,22 @@ function showDepartments() {
 
 function showRoles() {
   db.promise()
-  .query("SELECT role_id, title, salary, department_id FROM role;")
+  .query("SELECT role_id, title, salary, department_id FROM roles;")
   .then((roles)=> {
     console.table(roles[0]);
    mainMenuPrompt();
   });
 }
+
+function showEmployees() {
+  db.promise()
+  .query("SELECT first_name, last_name, roles_id, manager FROM employees;")
+  .then((employees)=> {
+    console.table(employees[0]);
+   mainMenuPrompt();
+  });
+}
+
 
 const addDepartmentsPrompts = [
   {
@@ -57,7 +68,7 @@ const addDepartmentsPrompts = [
 const addRolePrompts = [
   {
     type: "input",
-    name: "role_id",
+    name: "roles_id",
     message: "Please input a role ID",
     
   },
@@ -80,6 +91,36 @@ const addRolePrompts = [
     type: "input",
     name: "salary",
     message: "Please input a salary",
+    
+  }
+  
+];
+
+const addEmployeePrompts = [
+  {
+    type: "input",
+    name: "first_name",
+    message: "Please input a first name",
+    
+  },
+
+  {
+    type: "input",
+    name: "last_name",
+    message: "Please input a last name",
+    
+  },
+
+  {
+    type: "input",
+    name: "role_id",
+    message: "Please input a role id number" 
+  },
+
+  {
+    type: "input",
+    name: "manager",
+    message: "Please input a manager",
     
   }
   
@@ -108,6 +149,12 @@ function mainMenuPrompt() {
     }
     else if( answer === "Add a role"){
       promptAddRoles()
+    }
+    if(answer === "View all employees"){
+      showEmployees()
+    }
+    else if( answer === "Add an employee"){
+      promptAddEmployees()
     }
 });
 
@@ -141,14 +188,21 @@ db.promise()
 
 function addRoles(role_id, title, salary, department_id ){
   db.promise()
-  .query("INSERT INTO roles (role_id, title, salary, department_id) VALUES (?,?,?.?) ",[role_id, title, salary, department_id] )
+  .query("INSERT INTO roles (role_id, title, salary, department_id) VALUES (?,?,?,?) ",[role_id, title, salary, department_id] )
   .then((newRoles) => {
     console.log(newRoles[0]);
     mainMenuPrompt()
   });
 }
 
-
+function AddEmployees(first_name, last_name, roles_id, manager){
+  db.promise()
+  .query("INSERT INTO employees (first_name, last_name, roles_id, manager) VALUES (?,?,?,?) ",[first_name, last_name, roles_id, manager] )
+  .then((newEmployees) => {
+    console.log(newEmployees[0]);
+    mainMenuPrompt()
+  });
+}
 
 //Prompt for adding new department
 function promptAddDepartments(){
@@ -173,5 +227,17 @@ function promptAddRoles(){
   
   }
 
+  function promptAddEmployees(){
+    inquirer.prompt(addEmployeePrompts).then(function(inputs){
+      console.log(inputs.first_name, inputs.last_name, inputs.role_id, inputs.manager);
+      const newFirstName = inputs.first_name
+      const newLastName = inputs.last_name
+      const newRole = inputs.role_id
+      const newManager = inputs.manager 
+      AddEmployees( newFirstName, newLastName,newRole, newManager );
+    });
+    
+    }
+  
 
   mainMenuPrompt()
