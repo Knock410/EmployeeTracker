@@ -47,7 +47,7 @@ function showEmployees() {
   });
 }
 
-
+//Questions to add a department 
 const addDepartmentsPrompts = [
   {
     type: "input",
@@ -64,7 +64,7 @@ const addDepartmentsPrompts = [
   }
   
 ];
-
+//Questions to add a role 
 const addRolePrompts = [
   {
     type: "input",
@@ -95,7 +95,7 @@ const addRolePrompts = [
   }
   
 ];
-
+//Questions to add a employee
 const addEmployeePrompts = [
   {
     type: "input",
@@ -126,14 +126,8 @@ const addEmployeePrompts = [
   
 ];
 
-// "View all departments",
-//         "View all roles",
-//         "View all employees",
-//         "Add a department",
-//         "Add a role",
-//         "Add an employee",
-//         "Update an employee"
 
+//Main menu prompt to run relevant functions depending on the choices of the user 
 function mainMenuPrompt() {
   inquirer.prompt(MenuQuestions).then(function(selection){
     console.log(selection.answer);
@@ -185,7 +179,7 @@ db.promise()
 
 });
 }
-
+//adds to the role table 
 function addRoles(role_id, title, salary, department_id ){
   db.promise()
   .query("INSERT INTO roles (role_id, title, salary, department_id) VALUES (?,?,?,?) ",[role_id, title, salary, department_id] )
@@ -194,7 +188,7 @@ function addRoles(role_id, title, salary, department_id ){
     mainMenuPrompt()
   });
 }
-
+//adds to the employee table 
 function AddEmployees(first_name, last_name, roles_id, manager){
   db.promise()
   .query("INSERT INTO employees (first_name, last_name, roles_id, manager) VALUES (?,?,?,?) ",[first_name, last_name, roles_id, manager] )
@@ -226,7 +220,7 @@ function promptAddRoles(){
   });
   
   }
-
+//Prompt forr adding a new employee
   function promptAddEmployees(){
     inquirer.prompt(addEmployeePrompts).then(function(inputs){
       console.log(inputs.first_name, inputs.last_name, inputs.role_id, inputs.manager);

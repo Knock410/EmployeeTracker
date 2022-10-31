@@ -1,4 +1,4 @@
-
+-- Creates tables for the employee database
 
 CREATE TABLE department (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
