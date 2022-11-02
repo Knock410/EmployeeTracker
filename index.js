@@ -215,7 +215,7 @@ function promptAddRoles(){
     const newRoleId = inputs.roles_id
     const newRoleTitle = inputs.title
     const newRoleSalary = inputs.salary
-    const newRDepartmentId = inputs.deparment_id
+    const newRDepartmentId = inputs.department_id
     addRoles( newRoleId, newRoleTitle,newRoleSalary, newRDepartmentId  );
   });
   
