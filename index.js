@@ -235,3 +235,7 @@ function promptAddRoles(){
   
 
   mainMenuPrompt()
+   
+  //Things to fix 
+  //Roles on department_id- intergers retun null 
+  //Salary on roles-intergers is rounded up 
